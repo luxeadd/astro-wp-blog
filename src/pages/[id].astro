@@ -1,8 +1,9 @@
 ---
-import "../styles/global.css";
+import Layout from "./Layout.astro";
+import { fetchPosts, fetchPost } from "../utils/api";
+
 export async function getStaticPaths() {
-  const res = await fetch("https://sassy-creat.com/wp-json/wp/v2/posts");
-  const posts = await res.json();
+  const posts = await fetchPosts();
   const paths = posts.map((post) => ({
     params: {
       id: post.id,
@@ -12,31 +13,37 @@ export async function getStaticPaths() {
 }
 
 const { id } = Astro.params;
-const res_post = await fetch(`https://sassy-creat.com/wp-json/wp/v2/posts/${id}`);
-const post = await res_post.json();
+const post = await fetchPost(id);
+const featuredImageUrl = post._embedded["wp:featuredmedia"][0].source_url;
 ---
 
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="utf-8" />
-    <title set:html={post.title.rendered}></title>
-    <link rel="stylesheet" href="https://sassy-creat.com/wp-content/themes/sango-theme/style.css">
-  </head>
-  <body>
-    <div class="container max-w-xl mx-auto px-2">
-      <h1 class="text-3xl font-bold" set:html={post.title.rendered}></h1>
-      <div class="content mt-5">
-        <p set:html={post.content.rendered}></p>
-      </div>
-      <div class="mt-5">
-        <p>
-          <a href="/">戻る</a>
-        </p>
-      </div>
+<Layout>
+  <div class="container max-w-xl mx-auto px-2">
+    <h1 class="text-3xl font-bold" set:html={post.title.rendered} />
+    <p class="text-sm text-gray-400">
+      {post.date.substring(0, 10)}
+    </p>
+    {
+      featuredImageUrl && (
+        <div class="mt-5">
+          <img
+            src={featuredImageUrl}
+            alt={post.title.rendered}
+            class="w-full h-auto"
+          />
+        </div>
+      )
+    }
+    <div class="content mt-5">
+      <p set:html={post.content.rendered} />
     </div>
-  </body>
-</html>
+    <div class="mt-5">
+      <p>
+        <a href="/">戻る</a>
+      </p>
+    </div>
+  </div>
+</Layout>
 
 <style is:global>
   .content p {
