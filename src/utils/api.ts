@@ -5,7 +5,18 @@ export async function fetchPosts() {
   return res.json();
 }
 
+export async function fetchResults() {
+  const res = await fetch(`${API_BASE_URL}/result?_embed`);
+  return res.json();
+}
+
 export async function fetchPost(id: string) {
   const res = await fetch(`${API_BASE_URL}/posts/${id}?_embed`);
   return res.json();
+}
+
+export async function fetchResult(id: string) {
+  const res = await fetch(`${API_BASE_URL}/result/${id}?_embed`);
+  return res.json();
 } 
+

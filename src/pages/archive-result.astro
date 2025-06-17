@@ -1,0 +1,41 @@
+---
+import Layout from "./Layout.astro";
+import { fetchResults } from "../utils/api";
+const results = await fetchResults();
+---
+
+<Layout>
+  <div class="container max-w-xl mx-auto">
+    <h1 class="text-3xl font-bold">実績</h1>
+    <ul>
+      {
+        results.map((result) => (
+          <li class="mt-5">
+            <a href={result.id} class="flex items-center gap-6">
+              <figure class="w-1/3">
+                {result._embedded["wp:featuredmedia"][0].source_url && (
+                  <img
+                    src={result._embedded["wp:featuredmedia"][0].source_url}
+                    alt={result.title.rendered}
+                  />
+                )}
+              </figure>
+              <div class="w-2/3">
+                <h2 class="font-bold" set:html={result.title.rendered} />
+                <p class="text-sm text-gray-400">
+                  {result.date.substring(0, 10)}
+                </p>
+                <div>
+                  {/* <p set:html={result.excerpt.rendered} /> */}
+                </div>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="mt-5">
+      <a href="/" class="btn">TOPへ戻る</a>
+    </div>
+  </div>
+</Layout>
