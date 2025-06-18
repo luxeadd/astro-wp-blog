@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:10089//wp-json/wp/v2";
+const API_BASE_URL = "http://localhost:10089/wp-json/wp/v2";
 
 export async function fetchPosts() {
   const res = await fetch(`${API_BASE_URL}/posts?_embed`);
