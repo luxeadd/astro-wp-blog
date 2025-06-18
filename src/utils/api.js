@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://taiyou-kiso.local/wp-json/wp/v2";
+const API_BASE_URL = "http://localhost:10089//wp-json/wp/v2";
 
 export async function fetchPosts() {
   const res = await fetch(`${API_BASE_URL}/posts?_embed`);
@@ -10,13 +10,12 @@ export async function fetchResults() {
   return res.json();
 }
 
-export async function fetchPost(id: string) {
+export async function fetchPost(id) {
   const res = await fetch(`${API_BASE_URL}/posts/${id}?_embed`);
   return res.json();
 }
 
-export async function fetchResult(id: string) {
+export async function fetchResult(id) { 
   const res = await fetch(`${API_BASE_URL}/result/${id}?_embed`);
   return res.json();
-} 
-
+}
