@@ -1,0 +1,92 @@
+---
+import Layout from "../layout/Layout.astro";
+
+let message = "";
+let error = "";
+let loading = false;
+
+async function handleSubmit(e) {
+  e.preventDefault();
+  loading = true;
+  error = "";
+  message = "";
+
+  const formData = new FormData(e.target);
+
+  try {
+    const res = await fetch(
+      "http://localhost:10089/wp-json/contact-form-7/v1/contact-forms/7/feedback",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const data = await res.json();
+    if (data.status === "mail_sent") {
+      message = "送信完了しました！";
+    } else {
+      error = "送信に失敗しました。";
+    }
+  } catch (e) {
+    error = "通信エラーが発生しました。";
+  } finally {
+    loading = false;
+  }
+}
+---
+
+<Layout>
+  <div class="mv relative h-[400px] bg-gradient-to-b from-indigo-50 to-white">
+    <div class="absolute inset-0 flex items-center justify-center">
+      <img
+        src="/mv-animation.svg"
+        alt="Welcome Animation"
+        class="w-full max-w-3xl"
+      />
+    </div>
+  </div>
+  <div class="container max-w-xl mx-auto">
+    <h1 class="text-3xl font-bold">お問い合わせ</h1>
+    <form onsubmit={handleSubmit} class="space-y-4 mt-8">
+      <label class="block">
+        氏名
+        <input
+          type="text"
+          name="your-name"
+          autocomplete="name"
+          required
+          class="border p-2 w-full"
+        />
+      </label>
+      <label class="block">
+        メールアドレス
+        <input
+          type="email"
+          name="your-email"
+          autocomplete="email"
+          required
+          class="border p-2 w-full"
+        />
+      </label>
+      <label class="block">
+        題名
+        <input
+          type="text"
+          name="your-subject"
+          required
+          class="border p-2 w-full"
+        />
+      </label>
+      <label class="block">
+        メッセージ本文 (任意)
+        <textarea name="your-message" class="border p-2 w-full"></textarea>
+      </label>
+      <button type="submit" disabled={loading} class="btn">送信</button>
+    </form>
+    {message && <p class="text-green-600">{message}</p>}
+    {error && <p class="text-red-600">{error}</p>}
+    <div class="mt-5">
+      <a href="/" class="btn">トップページへ戻る</a>
+    </div>
+  </div>
+</Layout>
