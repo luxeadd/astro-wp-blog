@@ -23,3 +23,9 @@ export async function fetchResult(id) {
   const res = await fetch(`${API_BASE_URL}/result/${id}?_embed`);
   return res.json();
 }
+
+// メディア情報を取得
+export async function fetchMedia(id) {
+  const res = await fetch(`${API_BASE_URL}/media/${id}`);
+  return res.json();
+}

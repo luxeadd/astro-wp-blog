@@ -1,0 +1,75 @@
+---
+import Layout from "../../layout/Layout.astro";
+// WordPress REST APIデータ取得
+import { fetchResults, fetchResult, fetchMedia } from "../../utils/api.js";  
+// 静的パス生成
+export async function getStaticPaths() {
+  const results = await fetchResults();
+  const paths = results.map((result) => ({
+    params: {
+      id: result.id,
+    },
+  }));
+  return paths;
+}
+// パラメーター取得
+const { id } = Astro.params;
+const result = await fetchResult(id);
+// アイキャッチ画像URL取得
+const featuredImageUrl = result._embedded["wp:featuredmedia"][0].source_url;
+
+//ACFの画像を取得
+const acfImgIds = [
+  result.acf.result_desc.img, 
+  result.acf.result_desc.result_items.result_item1.img, 
+  result.acf.result_desc.result_items.result_item2.img
+];
+
+const acfImgUrls = await Promise.all(
+  acfImgIds.map(async (imgId) => {
+    const media = await fetchMedia(imgId);
+    return media.source_url;
+  })
+);
+
+---
+
+
+<Layout>
+  <div class="container max-w-xl mx-auto px-2">
+    <h1 class="text-3xl font-bold" set:html={result.title.rendered} />
+    <p class="text-sm text-gray-400">
+      {result.date.substring(0, 10)}
+    </p>
+    {
+      featuredImageUrl && (
+        <div class="mt-5">
+          <img
+            src={featuredImageUrl}
+            alt={result.title.rendered}
+            class="w-full h-auto"
+          />
+        </div>
+      )
+    }
+    <div class="content mt-5">
+      <img src={acfImgUrls[0]} alt="">
+      <p>{result.acf.result_desc.text}</p>
+      <img src={acfImgUrls[1]} alt="">
+      <p>{result.acf.result_desc.result_items.result_item1.text}</p>
+      <img src={acfImgUrls[2]} alt="">
+      <p>{result.acf.result_desc.result_items.result_item2.text}</p>
+    </div>
+    <div class="mt-5">
+      <p>
+        <a href="/result" class="btn">戻る</a>
+      </p>
+    </div>
+  </div>
+</Layout>
+
+<style is:global>
+  .content p {
+    margin-bottom: 1em;
+  }
+</style>

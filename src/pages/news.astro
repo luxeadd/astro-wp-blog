@@ -1,5 +1,6 @@
 ---
-import Layout from "./Layout.astro";
+import Layout from "../layout/Layout.astro";
+// WordPress REST APIデータ取得
 import { fetchPosts } from "../utils/api.js";
 const posts = await fetchPosts();
 ---
@@ -11,11 +12,11 @@ const posts = await fetchPosts();
       {
         posts.map((post) => (
           <li class="mt-5">
-            <a href={post.id} class="flex items-center gap-6">
+            <a href={`/news/${post.id}`} class="flex items-center gap-6">
               <figure class="w-1/3">
                 {post._embedded["wp:featuredmedia"][0].source_url && (
                   <img
-                    src={post._embedded["wp:featuredmedia"][0].source_url}
+                    src={post._embedded["wp:featuredmedia"][0].media_details.sizes.medium_large.source_url}
                     alt={post.title.rendered}
                   />
                 )}

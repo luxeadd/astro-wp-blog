@@ -1,7 +1,8 @@
 ---
-import Layout from "./Layout.astro";
-import { fetchPosts, fetchPost } from "../utils/api.js";  
-
+import Layout from "../../layout/Layout.astro";
+// WordPress REST APIデータ取得
+import { fetchPosts, fetchPost } from "../../utils/api.js";  
+// 静的パス生成
 export async function getStaticPaths() {
   const posts = await fetchPosts();
   const paths = posts.map((post) => ({
@@ -11,9 +12,9 @@ export async function getStaticPaths() {
   }));
   return paths;
 }
-
 const { id } = Astro.params;
 const post = await fetchPost(id);
+// アイキャッチ画像URL取得
 const featuredImageUrl = post._embedded["wp:featuredmedia"][0].source_url;
 ---
 
@@ -39,7 +40,7 @@ const featuredImageUrl = post._embedded["wp:featuredmedia"][0].source_url;
     </div>
     <div class="mt-5">
       <p>
-        <a href="/archive-post" class="btn">戻る</a>
+        <a href="/news" class="btn">戻る</a>
       </p>
     </div>
   </div>
