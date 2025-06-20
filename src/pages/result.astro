@@ -6,7 +6,7 @@ const results = await fetchResults();
 ---
 
 <Layout>
-  <div class="container max-w-xl mx-auto">
+  <div class="container max-w-3xl mx-auto">
     <h1 class="text-3xl font-bold">実績</h1>
     <ul>
       {
@@ -27,7 +27,7 @@ const results = await fetchResults();
                   {result.date.substring(0, 10)}
                 </p>
                 <div>
-                  {/* <p set:html={result.excerpt.rendered} /> */}
+                  <p class="text-gray-400" set:html={result.acf.result_slide.slogan} />
                 </div>
               </div>
             </a>

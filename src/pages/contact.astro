@@ -5,34 +5,34 @@ let message = "";
 let error = "";
 let loading = false;
 
-async function handleSubmit(e) {
-  e.preventDefault();
-  loading = true;
-  error = "";
-  message = "";
+// async function handleSubmit(e) {
+//   e.preventDefault();
+//   loading = true;
+//   error = "";
+//   message = "";
 
-  const formData = new FormData(e.target);
+//   const formData = new FormData(e.target);
 
-  try {
-    const res = await fetch(
-      "http://localhost:10089/wp-json/contact-form-7/v1/contact-forms/7/feedback",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
-    const data = await res.json();
-    if (data.status === "mail_sent") {
-      message = "送信完了しました！";
-    } else {
-      error = "送信に失敗しました。";
-    }
-  } catch (e) {
-    error = "通信エラーが発生しました。";
-  } finally {
-    loading = false;
-  }
-}
+//   try {
+//     const res = await fetch(
+//       "https://test32.sassy-make.com/wp-json/contact-form-7/v1/contact-forms/212/feedback",
+//       {
+//         method: "POST",
+//         body: formData,
+//       }
+//     );
+//     const data = await res.json();
+//     if (data.status === "mail_sent") {
+//       message = "送信完了しました！";
+//     } else {
+//       error = "送信に失敗しました。";
+//     }
+//   } catch (e) {
+//     error = "通信エラーが発生しました。";
+//   } finally {
+//     loading = false;
+//   }
+// }
 ---
 
 <Layout>
@@ -47,7 +47,20 @@ async function handleSubmit(e) {
   </div>
   <div class="container max-w-xl mx-auto">
     <h1 class="text-3xl font-bold">お問い合わせ</h1>
-    <form onsubmit={handleSubmit} class="space-y-4 mt-8">
+    <form id="contact-form" class="space-y-4 mt-8">
+      <!-- Contact Form 7のhiddenフィールド -->
+      <!-- コンタクトフォーム7のフォームID -->
+      <input type="hidden" name="_wpcf7" value="212" />
+      <!-- コンタクトフォーム7のバージョン -->
+      <input type="hidden" name="_wpcf7_version" value="6.0.6" />
+      <!-- コンタクトフォーム7の言語 -->
+      <input type="hidden" name="_wpcf7_locale" value="ja" />
+      <!-- コンタクトフォーム7のユニットタグ -->
+      <input type="hidden" name="_wpcf7_unit_tag" value="wpcf7-f212-p214-o1" />
+      <!-- コンタクトフォーム7のコンテナポスト WP側のフォームが設置されているページのID -->
+      <input type="hidden" name="_wpcf7_container_post" value="214" />
+      <!-- コンタクトフォーム7の投稿データハッシュ -->
+      <input type="hidden" name="_wpcf7_posted_data_hash" value="" />
       <label class="block">
         氏名
         <input
@@ -81,7 +94,7 @@ async function handleSubmit(e) {
         メッセージ本文 (任意)
         <textarea name="your-message" class="border p-2 w-full"></textarea>
       </label>
-      <button type="submit" disabled={loading} class="btn">送信</button>
+      <button type="submit" class="btn">送信</button>
     </form>
     {message && <p class="text-green-600">{message}</p>}
     {error && <p class="text-red-600">{error}</p>}
@@ -90,3 +103,23 @@ async function handleSubmit(e) {
     </div>
   </div>
 </Layout>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document
+      .getElementById("contact-form")
+      .addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const res = await fetch(
+          "https://test32.sassy-make.com/wp-json/contact-form-7/v1/contact-forms/212/feedback",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+        const data = await res.json();
+        alert(data.message);
+      });
+  });
+</script>

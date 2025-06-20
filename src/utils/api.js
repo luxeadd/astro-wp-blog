@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:10089/wp-json/wp/v2";
+const API_BASE_URL = "https://test32.sassy-make.com/wp-json/wp/v2";
 
 // 投稿一覧を取得
 export async function fetchPosts() {

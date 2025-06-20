@@ -36,7 +36,7 @@ const acfImgUrls = await Promise.all(
 
 
 <Layout>
-  <div class="container max-w-xl mx-auto px-2">
+  <div class="container max-w-3xl mx-auto px-2">
     <h1 class="text-3xl font-bold" set:html={result.title.rendered} />
     <p class="text-sm text-gray-400">
       {result.date.substring(0, 10)}
@@ -53,6 +53,7 @@ const acfImgUrls = await Promise.all(
       )
     }
     <div class="content mt-5">
+      <p class="text-gray-400" set:html={result.acf.result_slide.slogan} />
       <img src={acfImgUrls[0]} alt="">
       <p>{result.acf.result_desc.text}</p>
       <img src={acfImgUrls[1]} alt="">
