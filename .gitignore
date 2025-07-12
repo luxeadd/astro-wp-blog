@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# Gitに含める.env.example
+PUBLIC_WP_API_URL="https://your-wordpress-site.com/wp-json/wp/v2"
+
 # macOS-specific files
 .DS_Store
 
