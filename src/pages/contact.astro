@@ -105,12 +105,15 @@ let loading = false;
 </Layout>
 
 <script>
+  // フォーム送信
   document.addEventListener("DOMContentLoaded", function () {
     document
       .getElementById("contact-form")
       .addEventListener("submit", async function (e) {
         e.preventDefault();
+        // フォームデータを取得
         const formData = new FormData(this);
+        // フォームデータを送信
         const res = await fetch(
           "https://test32.sassy-make.com/wp-json/contact-form-7/v1/contact-forms/212/feedback",
           {
@@ -118,7 +121,9 @@ let loading = false;
             body: formData,
           }
         );
+        // 送信結果を取得
         const data = await res.json();
+        // 送信結果を表示
         alert(data.message);
       });
   });

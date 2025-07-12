@@ -1,10 +1,9 @@
 ---
 import Layout from "../../layout/Layout.astro";
 // WordPress REST APIデータ取得
-import { fetchPosts, fetchPost } from "../../utils/api.js";  
-// 静的パス生成
 export async function getStaticPaths() {
-  const posts = await fetchPosts();
+  const res = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/posts?_embed`);
+  const posts = await res.json();
   const paths = posts.map((post) => ({
     params: {
       id: post.id,
@@ -13,7 +12,8 @@ export async function getStaticPaths() {
   return paths;
 }
 const { id } = Astro.params;
-const post = await fetchPost(id);
+const res = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/posts/${id}?_embed`);
+const post = await res.json();
 // アイキャッチ画像URL取得
 const featuredImageUrl = post._embedded["wp:featuredmedia"][0].source_url;
 ---

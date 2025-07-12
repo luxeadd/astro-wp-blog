@@ -1,8 +1,9 @@
 ---
 import Layout from "../layout/Layout.astro";
 // WordPress REST APIデータ取得
-import { fetchPosts } from "../utils/api.js";
-const posts = await fetchPosts();
+const res = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/posts?_embed`);
+// データをJSON形式で取得
+const posts = await res.json();
 ---
 
 <Layout>
