@@ -1,0 +1,70 @@
+---
+import Layout from "../../layout/Layout.astro";
+import CardNews from "../../parts/CardNews.astro";
+
+export async function getStaticPaths() {
+  // カテゴリー一覧を取得
+  const res = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/categories`);
+  const categories = await res.json();
+  
+  return categories.map((category) => ({
+    params: {
+      slug: category.slug,
+    },
+    props: { category }
+  }));
+}
+
+const { category } = Astro.props;
+const { slug } = Astro.params;
+
+// カテゴリー一覧を取得（ナビゲーション用）
+const categoriesRes = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/categories`);
+const categories = await categoriesRes.json();
+
+// カテゴリーの記事を取得
+const postsRes = await fetch(`${import.meta.env.PUBLIC_WP_API_URL}/posts?_embed&categories=${category.id}`);
+const posts = await postsRes.json();
+---
+
+<Layout>
+  <div class="container max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold">{category.name}の記事一覧</h1>
+
+    {/* カテゴリー一覧 */}
+    <div class="mt-5 flex gap-3 flex-wrap">
+      <a 
+        href="/news" 
+        class="text-sm px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-50"
+      >
+        全て
+      </a>
+      {categories.map((cat) => (
+        <a 
+          href={`/news/${cat.slug}`}
+          class={`text-sm px-4 py-2 rounded-full ${
+            cat.slug === slug 
+              ? 'bg-indigo-500 text-white hover:bg-indigo-600' 
+              : 'border border-gray-300 hover:bg-gray-50'
+          }`}
+        >
+          {cat.name}
+          <span class={cat.slug === slug ? 'ml-1 text-white' : 'ml-1 text-gray-500'}>
+            ({cat.count})
+          </span>
+        </a>
+      ))}
+    </div>
+
+    {/* 記事一覧 */}
+    <ul class="mt-8">
+      {posts.map((post) => (
+        <CardNews post={post} />
+      ))}
+    </ul>
+
+    <div class="mt-5 text-center">
+      <a href="/news" class="btn">お知らせ一覧へ戻る</a>
+    </div>
+  </div>
+</Layout>

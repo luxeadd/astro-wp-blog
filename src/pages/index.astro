@@ -1,6 +1,23 @@
 ---
 import Layout from "../layout/Layout.astro";
+import CardNews from "../parts/CardNews.astro";
+import CardResult from "../parts/CardResult.astro";
 
+// WordPress REST APIデータ取得 お知らせ最新3件
+const res = await fetch(
+  `${import.meta.env.PUBLIC_WP_API_URL}/posts?_embed&per_page=3`
+);
+// データをJSON形式で取得
+const posts = await res.json();
+console.log(posts);
+
+// WordPress REST APIデータ取得 実績最新3件
+const resResult = await fetch(
+  `${import.meta.env.PUBLIC_WP_API_URL}/result?_embed&per_page=3`
+);
+// データをJSON形式で取得
+const results = await resResult.json();
+console.log(results);
 ---
 
 <Layout>
@@ -13,15 +30,38 @@ import Layout from "../layout/Layout.astro";
       />
     </div>
   </div>
+
   <div class="container max-w-3xl mx-auto">
     <h1 class="text-3xl font-bold">トップ</h1>
-    <div class="mt-5">
+    <!-- お知らせ -->
+    <div class="container max-w-3xl mx-auto">
+      <h2 class="text-3xl font-bold">お知らせ</h2>
+      <ul>
+        {
+          posts.map((post) => (
+            <CardNews post={post} />
+          ))
+        }
+      </ul>
+    </div>
+    <div class="mt-5 text-center">
       <a href="/news" class="btn">お知らせ一覧</a>
     </div>
-    <div class="mt-5">
+    <!-- 実績 -->
+    <div class="container max-w-3xl mx-auto">
+      <h2 class="text-3xl font-bold">実績</h2>
+      <ul>
+        {
+          results.map((result) => (
+            <CardResult result={result} />
+          ))
+        }
+      </ul>
+    </div>
+    <div class="mt-5 text-center">
       <a href="/result" class="btn">実績一覧</a>
     </div>
-    <div class="mt-5">
+    <div class="mt-5 text-center">
       <a href="/contact" class="btn">お問い合わせ</a>
     </div>
   </div>

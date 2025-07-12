@@ -38,10 +38,8 @@ const featuredImageUrl = post._embedded["wp:featuredmedia"][0].source_url;
     <div class="content mt-5">
       <p set:html={post.content.rendered} />
     </div>
-    <div class="mt-5">
-      <p>
-        <a href="/news" class="btn">戻る</a>
-      </p>
+    <div class="mt-5 text-center">
+      <a href="/news" class="btn">戻る</a>
     </div>
   </div>
 </Layout>
